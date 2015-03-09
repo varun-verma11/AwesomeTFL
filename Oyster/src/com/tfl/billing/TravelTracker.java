@@ -41,6 +41,13 @@ public class TravelTracker implements ScanListener
 
         List<Journey> journeys = new ArrayList<Journey>();
 
+        BigDecimal customerTotal = getChargeForCustomer(customerJourneyEvents, journeys);
+
+        PaymentsSystem.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
+    }
+
+    private BigDecimal getChargeForCustomer(List<JourneyEvent> customerJourneyEvents, List<Journey> journeys)
+    {
         JourneyEvent start = null;
         for (JourneyEvent event : customerJourneyEvents)
         {
@@ -65,8 +72,7 @@ public class TravelTracker implements ScanListener
             }
             customerTotal = customerTotal.add(journeyPrice);
         }
-
-        PaymentsSystem.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
+        return customerTotal;
     }
 
     private BigDecimal roundToNearestPenny(BigDecimal poundsAndPence)

@@ -1,12 +1,14 @@
 package com.tfl.billing;
 
+import static com.tfl.billing.BillingConstants.getNumberOfMilisecondsInSecond;
+import static com.tfl.billing.BillingConstants.getNumberOfSecondsInMinute;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
 public class Journey
 {
-
     private final JourneyEvent start;
     private final JourneyEvent end;
 
@@ -48,12 +50,12 @@ public class Journey
 
     public int durationSeconds()
     {
-        return (int) ((end.time() - start.time()) / 1000);
+        return (int) ((end.time() - start.time()) / getNumberOfMilisecondsInSecond());
     }
 
     public String durationMinutes()
     {
-        return "" + durationSeconds() / 60 + ":" + durationSeconds() % 60;
+        return "" + durationSeconds() / getNumberOfSecondsInMinute() + ":" + durationSeconds() % getNumberOfSecondsInMinute();
     }
 
     private String format(long time)

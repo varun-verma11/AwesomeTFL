@@ -29,6 +29,6 @@ public class ExampleRun
 
     private static void minutesPass(int n) throws InterruptedException
     {
-        Thread.sleep(n * 60 * 1000);
+        Thread.sleep(n * 1 * 1);
     }
 }
