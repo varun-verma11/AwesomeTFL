@@ -50,7 +50,6 @@ public class TravelTrackerTest extends TestCase
         bakerStreetReader.touch(myCard);
         minutesPass(10);
         kingsCrossReader.touch(myCard);
-
         travelTracker.chargeAccounts();
     }
 
