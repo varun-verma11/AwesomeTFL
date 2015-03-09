@@ -1,7 +1,6 @@
 package com.tfl.billing;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -15,7 +14,7 @@ import com.tfl.underground.Station;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BillingConstants.class)
-public class TravelTrackerTest extends TestCase
+public class TravelTrackerTest
 {
     OysterCard myCard;
     OysterCardReader paddingtonReader;
@@ -23,7 +22,7 @@ public class TravelTrackerTest extends TestCase
     OysterCardReader kingsCrossReader;
     TravelTracker travelTracker;
 
-    @Override
+    @Before
     public void setUp()
     {
         myCard = new OysterCard("38400000-8cf0-11bd-b23e-10b96e4ef00d");
