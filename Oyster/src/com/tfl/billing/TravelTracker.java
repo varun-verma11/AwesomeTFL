@@ -68,23 +68,21 @@ public class TravelTracker implements ScanListener
 
     public BigDecimal getPriceForJourney(Journey journey)
     {
-        BigDecimal journeyPrice = new BigDecimal(0);
         boolean isPeak = peak(journey);
         boolean isShort = isShort(journey);
         if (isPeak && isShort)
         {
-            journeyPrice = BillingConstants.PEAK_SHORT_CHARGE;
+            return BillingConstants.PEAK_SHORT_CHARGE;
         } else if (!isPeak && isShort)
         {
-            journeyPrice = BillingConstants.OFF_PEAK_SHORT_CHARGE;
-        } else if (isPeak && !isShort)
+           return BillingConstants.OFF_PEAK_SHORT_CHARGE;
+        } else if (isPeak)
         {
-            journeyPrice = BillingConstants.PEAK_LONG_CHARGE;
-        } else if (!isPeak && !isShort)
+           return BillingConstants.PEAK_LONG_CHARGE;
+        } else
         {
-            journeyPrice = BillingConstants.OFF_PEAK_LONG_CHARGE;
+             return BillingConstants.OFF_PEAK_LONG_CHARGE;
         }
-        return journeyPrice;
     }
 
     private boolean isShort(Journey journey)
