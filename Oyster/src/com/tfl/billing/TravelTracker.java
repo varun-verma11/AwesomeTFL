@@ -1,19 +1,22 @@
 package com.tfl.billing;
 
-import com.oyster.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import com.oyster.OysterCardReader;
+import com.oyster.ScanListener;
 import com.tfl.external.Customer;
 import com.tfl.external.CustomerDatabase;
 import com.tfl.external.PaymentsSystem;
 
-import java.math.BigDecimal;
-import java.util.*;
-
 public class TravelTracker implements ScanListener
 {
-
-    static final BigDecimal OFF_PEAK_JOURNEY_PRICE = new BigDecimal(2.40);
-    static final BigDecimal PEAK_JOURNEY_PRICE = new BigDecimal(3.20);
-
     private final List<JourneyEvent> eventLog = new ArrayList<JourneyEvent>();
     private final Set<UUID> currentlyTravelling = new HashSet<UUID>();
 
@@ -40,14 +43,6 @@ public class TravelTracker implements ScanListener
         }
 
         List<Journey> journeys = new ArrayList<Journey>();
-
-        BigDecimal customerTotal = getChargeForCustomer(customerJourneyEvents, journeys);
-
-        PaymentsSystem.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
-    }
-
-    private BigDecimal getChargeForCustomer(List<JourneyEvent> customerJourneyEvents, List<Journey> journeys)
-    {
         JourneyEvent start = null;
         for (JourneyEvent event : customerJourneyEvents)
         {
@@ -65,14 +60,37 @@ public class TravelTracker implements ScanListener
         BigDecimal customerTotal = new BigDecimal(0);
         for (Journey journey : journeys)
         {
-            BigDecimal journeyPrice = OFF_PEAK_JOURNEY_PRICE;
-            if (peak(journey))
-            {
-                journeyPrice = PEAK_JOURNEY_PRICE;
-            }
-            customerTotal = customerTotal.add(journeyPrice);
+            customerTotal = customerTotal.add(getPriceForJourney(journey));
         }
-        return customerTotal;
+
+        PaymentsSystem.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
+    }
+
+    public BigDecimal getPriceForJourney(Journey journey)
+    {
+        BigDecimal journeyPrice = new BigDecimal(0);
+        boolean isPeak = peak(journey);
+        boolean isShort = isShort(journey);
+        if (isPeak && isShort)
+        {
+            journeyPrice = BillingConstants.PEAK_SHORT_CHARGE;
+        } else if (!isPeak && isShort)
+        {
+            journeyPrice = BillingConstants.OFF_PEAK_SHORT_CHARGE;
+        } else if (isPeak && !isShort)
+        {
+            journeyPrice = BillingConstants.PEAK_LONG_CHARGE;
+        } else if (!isPeak && !isShort)
+        {
+            journeyPrice = BillingConstants.OFF_PEAK_LONG_CHARGE;
+        }
+        return journeyPrice;
+    }
+
+    private boolean isShort(Journey journey)
+    {
+        return (journey.endTime().getTime() - journey.startTime().getTime())
+                / (BillingConstants.getNumberOfMilisecondsInSecond() * BillingConstants.getNumberOfSecondsInMinute()) < 25;
     }
 
     private BigDecimal roundToNearestPenny(BigDecimal poundsAndPence)
