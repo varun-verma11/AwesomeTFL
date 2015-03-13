@@ -33,10 +33,17 @@ public class TravelTracker implements ScanListener
 
     private void totalJourneysFor(Customer customer)
     {
+        List<Journey> journeys = getRunningCostForCustomer(customer.cardId());
+
+        PaymentsSystem.getInstance().charge(customer, journeys, getTotalChargeForJourneys(journeys));
+    }
+
+    public List<Journey> getRunningCostForCustomer(UUID cardID)
+    {
         List<JourneyEvent> customerJourneyEvents = new ArrayList<JourneyEvent>();
         for (JourneyEvent journeyEvent : eventLog)
         {
-            if (journeyEvent.cardId().equals(customer.cardId()))
+            if (journeyEvent.cardId().equals(cardID))
             {
                 customerJourneyEvents.add(journeyEvent);
             }
@@ -56,8 +63,7 @@ public class TravelTracker implements ScanListener
                 start = null;
             }
         }
-
-        PaymentsSystem.getInstance().charge(customer, journeys, getTotalChargeForJourneys(journeys));
+        return journeys;
     }
 
     public BigDecimal getTotalChargeForJourneys(List<Journey> journeys)

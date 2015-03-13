@@ -1,0 +1,53 @@
+Feature: New Travel Charges
+
+Scenario: Morning Peak Long With Cap £9.00
+    Given oyster card is "38400000-8cf0-11bd-b23e-10b96e4ef00d"
+    And journey starts at 7:25
+    When card touched at Baker_Street
+    And 26 minutes passed
+    And card touched at Paddington
+    Then the running total is 3.80
+
+    And 15 minutes passed
+
+    And card touched at Baker_Street
+    And 15 minutes passed
+    And card touched at Kings_Cross
+    Then the running total is 6.70
+
+    And 173 minutes passed
+
+    And card touched at Kings_Cross
+    And 20 minutes passed
+    And card touched at Earls_Court
+    Then the running total is 9.00
+
+Scenario: Afternoon Off Peak Long With No Cap
+    Given oyster card is "07b0bcb1-87df-447f-bf5c-d9961ab9d01e"
+    And journey starts at 14:20
+    When card touched at Paddington
+    And 63 minutes passed
+    And card touched at Baker_Street
+    Then the running total is 2.70
+
+    And 22 minutes passed
+
+    And card touched at Baker_Street
+    And 14 minutes passed
+    And card touched at Kings_Cross
+    Then the running total is 4.30
+
+Scenario: Afternoon Peak Long With No Cap
+    Given oyster card is "89adbd1c-4de6-40e5-98bc-b3315c6873f2"
+    And journey starts at 16:58
+    When card touched at Paddington
+    And 20 minutes passed
+    And card touched at Baker_Street
+    Then the running total is 2.90
+
+    And 15 minutes passed
+
+    And card touched at Baker_Street
+    And 43 minutes passed
+    And card touched at Kings_Cross
+    Then the running total is 6.70
