@@ -68,7 +68,14 @@ public class TravelTracker implements ScanListener
         {
             JourneyCharge priceForJourney = getPriceForJourney(journey);
             customerTotal = customerTotal.add(priceForJourney.charge);
-            isAnyPeak = isAnyPeak || priceForJourney.isPeak;
+            isAnyPeak = isAnyPeak || priceForJourney.isPeak();
+        }
+        if (isAnyPeak && customerTotal.compareTo(BillingConstants.PEAK_CAP) == 1)
+        {
+            customerTotal = BillingConstants.PEAK_CAP;
+        } else if (!isAnyPeak && customerTotal.compareTo(BillingConstants.OFF_PEAK_CAP) == 1)
+        {
+            customerTotal = BillingConstants.OFF_PEAK_CAP;
         }
         return roundToNearestPenny(customerTotal);
     }

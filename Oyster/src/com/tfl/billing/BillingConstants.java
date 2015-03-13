@@ -19,8 +19,8 @@ public class BillingConstants
     public static final BigDecimal OFF_PEAK_LONG_CHARGE = new BigDecimal(2.70);
     public static final BigDecimal PEAK_SHORT_CHARGE = new BigDecimal(2.90);
     public static final BigDecimal PEAK_LONG_CHARGE = new BigDecimal(3.80);
-    public static final BigDecimal OFF_PEAK_CAP = new BigDecimal(7.0);
-    public static final BigDecimal PEAK_CAP = new BigDecimal(9.0);
+    public static final BigDecimal OFF_PEAK_CAP = new BigDecimal(7);
+    public static final BigDecimal PEAK_CAP = new BigDecimal(9);
 
     public static int getNumberOfMilisecondsInSecond()
     {
