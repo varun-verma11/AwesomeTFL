@@ -24,14 +24,11 @@ import com.oyster.OysterCard;
 public class TravelTrackerTest
 {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-
-    private OysterCard myCard;
     private TravelTracker travelTracker;
 
     @Before
     public void setUp()
     {
-        myCard = new OysterCard("38400000-8cf0-11bd-b23e-10b96e4ef00d");
         travelTracker = new TravelTracker();
 
         // PowerMockito.mockStatic(BillingConstants.class);
