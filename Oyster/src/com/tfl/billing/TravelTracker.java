@@ -57,38 +57,67 @@ public class TravelTracker implements ScanListener
             }
         }
 
-        BigDecimal customerTotal = new BigDecimal(0);
-        for (Journey journey : journeys)
-        {
-            customerTotal = customerTotal.add(getPriceForJourney(journey));
-        }
-
-        PaymentsSystem.getInstance().charge(customer, journeys, roundToNearestPenny(customerTotal));
+        PaymentsSystem.getInstance().charge(customer, journeys, getTotalChargeForJourneys(journeys));
     }
 
-    public BigDecimal getPriceForJourney(Journey journey)
+    public BigDecimal getTotalChargeForJourneys(List<Journey> journeys)
+    {
+        BigDecimal customerTotal = new BigDecimal(0);
+        boolean isAnyPeak = false;
+        for (Journey journey : journeys)
+        {
+            JourneyCharge priceForJourney = getPriceForJourney(journey);
+            customerTotal = customerTotal.add(priceForJourney.charge);
+            isAnyPeak = isAnyPeak || priceForJourney.isPeak;
+        }
+        return roundToNearestPenny(customerTotal);
+    }
+
+    public JourneyCharge getPriceForJourney(Journey journey)
     {
         boolean isPeak = peak(journey);
         boolean isShort = isShort(journey);
         if (isPeak && isShort)
         {
-            return BillingConstants.PEAK_SHORT_CHARGE;
+            return new JourneyCharge(BillingConstants.PEAK_SHORT_CHARGE, true);
         } else if (!isPeak && isShort)
         {
-           return BillingConstants.OFF_PEAK_SHORT_CHARGE;
+            return new JourneyCharge(BillingConstants.OFF_PEAK_SHORT_CHARGE, false);
         } else if (isPeak)
         {
-           return BillingConstants.PEAK_LONG_CHARGE;
+            return new JourneyCharge(BillingConstants.PEAK_LONG_CHARGE, true);
         } else
         {
-             return BillingConstants.OFF_PEAK_LONG_CHARGE;
+            return new JourneyCharge(BillingConstants.OFF_PEAK_LONG_CHARGE, false);
+        }
+    }
+
+    public class JourneyCharge
+    {
+        private BigDecimal charge;
+        private boolean isPeak;
+
+        JourneyCharge(BigDecimal charge, boolean isPeak)
+        {
+            this.isPeak = isPeak;
+            this.charge = charge;
+        }
+
+        public BigDecimal getCharge()
+        {
+            return charge;
+        }
+
+        public boolean isPeak()
+        {
+            return isPeak;
         }
     }
 
     private boolean isShort(Journey journey)
     {
-        return (journey.endTime().getTime() - journey.startTime().getTime())
-                / (BillingConstants.getNumberOfMilisecondsInSecond() * BillingConstants.getNumberOfSecondsInMinute()) < 25;
+        return (journey.endTime().getTime() - journey.startTime().getTime()) / (BillingConstants.getNumberOfMilisecondsInSecond() * BillingConstants
+                .getNumberOfSecondsInMinute()) < 25;
     }
 
     private BigDecimal roundToNearestPenny(BigDecimal poundsAndPence)

@@ -42,7 +42,7 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 16:45:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 16:59:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.OFF_PEAK_SHORT_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.OFF_PEAK_SHORT_CHARGE);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 05:00:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 05:24:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.OFF_PEAK_SHORT_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.OFF_PEAK_SHORT_CHARGE);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 05:45:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 05:59:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.OFF_PEAK_SHORT_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.OFF_PEAK_SHORT_CHARGE);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 10:23:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 10:32:00"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.OFF_PEAK_SHORT_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.OFF_PEAK_SHORT_CHARGE);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 05:00:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 05:59:00"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.OFF_PEAK_LONG_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.OFF_PEAK_LONG_CHARGE);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 12:00:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 13:19:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.OFF_PEAK_LONG_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.OFF_PEAK_LONG_CHARGE);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 20:00:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 20:25:01"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.OFF_PEAK_LONG_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.OFF_PEAK_LONG_CHARGE);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 08:00:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 08:24:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.PEAK_SHORT_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_SHORT_CHARGE);
     }
 
     @Test
@@ -114,19 +114,25 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 17:00:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 17:14:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.PEAK_SHORT_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_SHORT_CHARGE);
     }
 
     @Test
     public void testPeakLongJourneyChargeInMorning()
     {
-
+        Journey journey = mock(Journey.class);
+        when(journey.startTime()).thenReturn(getDate("2015.03.12 08:00:00"));
+        when(journey.endTime()).thenReturn(getDate("2015.03.12 09:14:59"));
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_LONG_CHARGE);
     }
 
     @Test
     public void testPeakLongJourneyChargeInEvening()
     {
-
+        Journey journey = mock(Journey.class);
+        when(journey.startTime()).thenReturn(getDate("2015.03.12 06:00:00"));
+        when(journey.endTime()).thenReturn(getDate("2015.03.12 06:35:59"));
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_LONG_CHARGE);
     }
 
     @Test
@@ -135,7 +141,7 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 09:55:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 10:10:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.PEAK_SHORT_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_SHORT_CHARGE);
     }
 
     @Test
@@ -144,15 +150,16 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 19:55:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 20:10:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.PEAK_SHORT_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_SHORT_CHARGE);
     }
+
     @Test
     public void testTouchingInMorningPeakAndOutInOffPeakLongJourney()
     {
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 09:55:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 10:40:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.PEAK_LONG_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_LONG_CHARGE);
     }
 
     @Test
@@ -161,7 +168,7 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 19:55:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 20:30:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.PEAK_LONG_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_LONG_CHARGE);
     }
 
     @Test
@@ -170,33 +177,35 @@ public class TravelTrackerTest
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 05:55:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 06:10:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.PEAK_SHORT_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_SHORT_CHARGE);
     }
+
     @Test
     public void testTouchingInEveningOffPeakAndOutInPeakShortJourney()
     {
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 16:54:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 17:10:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.PEAK_SHORT_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_SHORT_CHARGE);
     }
+
     @Test
     public void testTouchingInMorningOffPeakAndOutInPeakLongJourney()
     {
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 05:55:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 07:10:59"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.PEAK_LONG_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_LONG_CHARGE);
     }
+
     @Test
     public void testTouchingInEveningOffPeakAndOutInPeakLongJourney()
     {
         Journey journey = mock(Journey.class);
         when(journey.startTime()).thenReturn(getDate("2015.03.12 16:54:00"));
         when(journey.endTime()).thenReturn(getDate("2015.03.12 17:45:49"));
-        assertEquals(travelTracker.getPriceForJourney(journey), BillingConstants.PEAK_LONG_CHARGE);
+        assertEquals(travelTracker.getPriceForJourney(journey).getCharge(), BillingConstants.PEAK_LONG_CHARGE);
     }
-
 
     private static Date getDate(String date)
     {
